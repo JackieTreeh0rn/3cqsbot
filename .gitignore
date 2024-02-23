@@ -6,3 +6,4 @@ config.ini
 config.ini.old
 config.ini.*
 launch.json
+.DS_Store
