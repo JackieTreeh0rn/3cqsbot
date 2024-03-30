@@ -6,3 +6,5 @@ numpy
 tenacity
 portalocker
 Babel
+python-socketio[asyncio_client]
+smtplib
