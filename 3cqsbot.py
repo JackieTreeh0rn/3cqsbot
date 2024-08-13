@@ -41,9 +41,11 @@ args = parser.parse_args()
 if attributes.get("debug", False):
     loglevel = "DEBUG"
     wslogger = True
+    engineio = True
 else:
     loglevel = "INFO"
     wslogger = False
+    engineio = False
 
 # Set logging output
 # Thanks to @M1cha3l for improving logging output
@@ -86,7 +88,7 @@ p3cw = Py3CW(
 # Initialize socket.io async client
 sio = socketio.AsyncClient(
     logger=logging,
-    engineio_logger=logging,
+    engineio_logger=engineio,
     reconnection=False,
     reconnection_delay=attributes.get("websocket_reconnection_delay", 10000),
     reconnection_attempts=attributes.get("websocket_reconnection_attempts", 0),
@@ -106,6 +108,7 @@ asyncState.fgi = -1
 asyncState.fgi_downtrend = False
 asyncState.fgi_allows_trading = False
 asyncState.fgi_time_until_update = 1
+
 
 ######################################################
 #                     Methods                        #
@@ -172,6 +175,7 @@ def __account_data():
         sys.exit("Problem fetching account data from 3commas api - stopping!")
     else:
         for accounts in data:
+            logging.debug("available accounts: " + accounts["name"])
             if accounts["name"] == attributes.get("account_name"):
                 account.update({"id": str(accounts["id"])})
                 account.update({"market_code": str(accounts["market_code"])})
